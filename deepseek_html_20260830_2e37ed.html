@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Knitting Records™</title>
+    <link rel="icon" href="https://cdn.imageurlgenerator.com/uploads/497d07b9-cb76-4c9b-9971-cb08d44a5880.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #090909;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #0a1a29;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f3a4b;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo img {
+            height: 48px;
+            width: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #2c526b;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #b8d8e8, #7bb3d9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 12px rgba(90, 170, 220, 0.2);
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            transition: 0.2s;
+        }
+
+        .hamburger:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #e0edf5;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu-overlay.open {
+            display: flex;
+        }
+
+        .menu-panel {
+            background: #0a1a29;
+            padding: 2.5rem 2.8rem;
+            border-radius: 40px;
+            border: 1px solid #1f3a4b;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            max-width: 400px;
+            width: 85%;
+            text-align: center;
+        }
+
+        .menu-panel a {
+            display: block;
+            color: #d4e9f5;
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: 500;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #1a3140;
+            transition: 0.2s;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-panel a:last-child {
+            border-bottom: none;
+        }
+
+        .menu-panel a:hover {
+            color: #ffffff;
+            background: #132f40;
+            border-radius: 12px;
+            padding-left: 1rem;
+        }
+
+        .close-menu {
+            margin-top: 1.8rem;
+            background: #1f3a4b;
+            border: none;
+            color: #fff;
+            font-size: 1.1rem;
+            padding: 0.6rem 2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .close-menu:hover {
+            background: #2b536b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1.5rem 2rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .section {
+            display: none;
+            animation: fade 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            0% { opacity: 0.3; transform: translateY(6px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 1.8rem;
+            background: linear-gradient(135deg, #b0d4e8, #6ba3c7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .news-card, .release-card {
+            background: #0f1f2b;
+            border-radius: 28px;
+            padding: 1.2rem;
+            border-left: 6px solid #2b6a8a;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.6);
+            transition: 0.2s;
+        }
+
+        .news-card:hover, .release-card:hover {
+            background: #132c3b;
+            transform: scale(1.01);
+        }
+
+        .news-card img, .release-card img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 1px solid #1f3a4b;
+            flex-shrink: 0;
+        }
+
+        .news-content, .release-content {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .news-content h3, .release-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.3rem;
+            color: #cde3ef;
+        }
+
+        .news-content p, .release-content p {
+            color: #b0cbd9;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .release-content a {
+            display: inline-block;
+            margin-top: 0.5rem;
+            background: #1f3a4b;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            color: #e3f0f7;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 1px solid #346480;
+        }
+
+        .release-content a:hover {
+            background: #2a4f66;
+        }
+
+        .historia-text {
+            background: #0f1f2b;
+            padding: 2rem 2.2rem;
+            border-radius: 40px;
+            border-left: 8px solid #2b6a8a;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            max-width: 800px;
+            margin: 1rem auto;
+            color: #d0e2ed;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+        }
+
+        .contato-box, .demo-box {
+            background: #0f1f2b;
+            padding: 2rem 2rem 2.5rem;
+            border-radius: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid #1f3a4b;
+        }
+
+        .contato-box h3, .demo-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #c4dceb;
+        }
+
+        .form-group {
+            margin-bottom: 1.3rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            color: #b0ccdd;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 30px;
+            border: 1px solid #1f3a4b;
+            background: #090909;
+            color: #f0f0f0;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #3f7b9c;
+            box-shadow: 0 0 0 3px rgba(60, 130, 180, 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+            border-radius: 20px;
+        }
+
+        .btn-enviar, .btn-demo {
+            background: #1f3a4b;
+            color: white;
+            border: none;
+            padding: 0.9rem 2.5rem;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+            border: 1px solid #2f5a74;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-enviar:hover, .btn-demo:hover {
+            background: #2a5670;
+            transform: scale(1.02);
+        }
+
+        .toggle-contato {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .toggle-contato button {
+            background: #0f1f2b;
+            border: 1px solid #1f3a4b;
+            color: #b0ccdd;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .toggle-contato button.active {
+            background: #1f3a4b;
+            color: white;
+            border-color: #2b6a8a;
+        }
+
+        .toggle-contato button:hover {
+            background: #1f3a4b;
+            color: white;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .rodape {
+            background: #0a1a29;
+            padding: 2.5rem 1.5rem;
+            margin-top: 2.5rem;
+            border-top: 1px solid #1a3140;
+            text-align: center;
+        }
+
+        .rodape form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .rodape input {
+            flex: 1 1 200px;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid #1f3a4b;
+            background: #090909;
+            color: #eee;
+            font-size: 1rem;
+        }
+
+        .rodape button {
+            background: #1f3a4b;
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #2f5a74;
+        }
+
+        .rodape button:hover {
+            background: #2a5670;
+        }
+
+        .msg-sucesso {
+            background: #0f2a1a;
+            border: 1px solid #2a7a4a;
+            color: #b0e0c0;
+            padding: 1.2rem;
+            border-radius: 40px;
+            margin-top: 1.2rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 0.8rem 1rem; }
+            .logo span { font-size: 1.3rem; }
+            .news-card img, .release-card img { width: 80px; height: 80px; }
+            .menu-panel { padding: 2rem 1.5rem; }
+            .menu-panel a { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="https://cdn.imageurlgenerator.com/uploads/497d07b9-cb76-4c9b-9971-cb08d44a5880.png" alt="Knitting Records logo">
+            <span>Knitting Records™</span>
+        </div>
+        <div class="hamburger" id="hamburger" aria-label="menu">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="menu-panel">
+            <a href="#" data-section="inicio">Início</a>
+            <a href="#" data-section="noticias">Notícias</a>
+            <a href="#" data-section="contato">Contate-Nos</a>
+            <a href="#" data-section="historia">História</a>
+            <a href="#" data-section="lancamentos">Lançamentos</a>
+            <button class="close-menu" id="closeMenu">✕ Fechar</button>
+        </div>
+    </div>
+
+    <main class="container">
+        <section id="inicio" class="section active">
+            <h1>🎧 Bem-vindo à Knitting</h1>
+            <div style="background:#0f1f2b; border-radius:40px; padding:2rem; border-left:6px solid #2b6a8a;">
+                <p style="font-size:1.2rem; line-height:1.6; color:#c4dceb;">A nova gravadora com alma de moleque. Pagode, sertanejo, hip hop e montagem/funk.<br>
+                <span style="color:#7bb3d9;">Nascemos em junho de 2026.</span> E já estamos prontos pra fazer história.</p>
+            </div>
+            <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+                <span style="background:#0a1a29; padding:0.6rem 1.8rem; border-radius:60px; border:1px solid #1f3a4b;">🔥 Pagode</span>
+                <span style="background:#0a1a29; padding:0.6rem 1.8rem; border-radius:60px; border:1px solid #1f3a4b;">🎸 Sertanejo</span>
+                <span style="background:#0a1a29; padding:0.6rem 1.8rem; border-radius:60px; border:1px solid #1f3a4b;">🎤 Hip Hop</span>
+                <span style="background:#0a1a29; padding:0.6rem 1.8rem; border-radius:60px; border:1px solid #1f3a4b;">🔊 Montagem/Funk</span>
+            </div>
+        </section>
+
+        <section id="noticias" class="section">
+            <h1>📰 Notícias</h1>
+            <div class="card-grid">
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d50d27fbe?w=150&h=150&fit=crop&crop=center" alt="música">
+                    <div class="news-content">
+                        <h3>Knitting Records assina com MC Vick</h3>
+                        <p>O moleque de 14 anos que mistura funk com pagode chega com tudo. Single "Fita Amarela" já está em pré-produção.</p>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=150&h=150&fit=crop&crop=center" alt="estúdio">
+                    <div class="news-content">
+                        <h3>Estúdio novo em construção</h3>
+                        <p>Nosso espaço criativo vai ter sala de gravação, mixagem e uma parede de vinil. Previsão: outubro de 2026.</p>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top:1.2rem; color:#6f8fa0;">*notícias fictícias para demonstrar o formato</p>
+        </section>
+
+        <section id="contato" class="section">
+            <h1>📬 Contate-Nos</h1>
+            <div class="toggle-contato">
+                <button id="btnContato" class="active">Contate-Nos</button>
+                <button id="btnDemo">Envie sua demo</button>
+            </div>
+
+            <div id="formContato" class="contato-box">
+                <h3>✉️ Fale com a gente</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label>Seu e-mail</label>
+                        <input type="email" id="contactEmail" placeholder="voce@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Assunto</label>
+                        <input type="text" id="contactSubject" placeholder="Assunto da mensagem" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mensagem</label>
+                        <textarea id="contactMessage" placeholder="Escreva sua mensagem..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-enviar">Enviar</button>
+                    <div id="contactStatus"></div>
+                </form>
+            </div>
+
+            <div id="formDemo" class="demo-box hide">
+                <h3>🎧 Envie sua demo</h3>
+                <form id="demoForm">
+                    <div class="form-group"><label>Nome da música</label><input type="text" id="demoNomeMusica" required></div>
+                    <div class="form-group"><label>Nome artístico</label><input type="text" id="demoArtistico" required></div>
+                    <div class="form-group">
+                        <label>Gênero</label>
+                        <select id="demoGenero">
+                            <option>Pagode</option><option>Sertanejo</option><option>Hip Hop</option><option>Montagem/Funk</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Nome completo</label><input type="text" id="demoNomeCompleto" required></div>
+                    <div class="form-group">
+                        <label>Objetivo</label>
+                        <select id="demoObjetivo">
+                            <option>Conseguir gravadora</option><option>Só demo para divulgação</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>O que pretende fazendo com essa demo?</label><input type="text" id="demoPretende" placeholder="ex: mostrar ao mercado" required></div>
+                    <div class="form-group"><label>E-mail</label><input type="email" id="demoEmail" required></div>
+                    <div class="form-group"><label>Link (SoundCloud ou YouTube)</label><input type="url" id="demoLink" placeholder="https://..." required></div>
+                    <button type="submit" class="btn-demo">Enviar demo</button>
+                    <div id="demoStatus"></div>
+                </form>
+            </div>
+        </section>
+
+        <section id="historia" class="section">
+            <h1>📖 Nossa história</h1>
+            <div class="historia-text">
+                A Knitting Records nasceu em junho de 2026, quando um moleque de 11 anos que entendia do papo, descobriu que um de seus amigos também queria fazer música.<br><br>
+                Os moleques ainda são crianças, mas já está tudo planejado.<br>
+                A ideia começou simples: Uma distribuidora, restrita apenas a esse amigo.<br>
+                E agora, se tornou uma gravadora, de braços abertos para qualquer colega que queira fazer músicas.
+            </div>
+        </section>
+
+        <section id="lancamentos" class="section">
+            <h1>💿 Lançamentos</h1>
+            <div class="card-grid">
+                <div class="release-card">
+                    <img src="https://images.unsplash.com/photo-1619983081563-430f63602796?w=150&h=150&fit=crop&crop=center" alt="capa">
+                    <div class="release-content">
+                        <h3>MC Vick - Fita Amarela</h3>
+                        <p>Single de estreia com batida envolvente e letra que fala de superação.</p>
+                        <a href="#">Linktr.ee (falso)</a>
+                    </div>
+                </div>
+                <div class="release-card">
+                    <img src="https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=150&h=150&fit=crop&crop=center" alt="capa2">
+                    <div class="release-content">
+                        <h3>DJ Oreia - Montagem do Beco</h3>
+                        <p>Funk pesado com sample de pagode. Já está tocando nos paredões.</p>
+                        <a href="#">Linktr.ee (falso)</a>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top:1.2rem; color:#6f8fa0;">*lançamentos fictícios para demonstrar o formato</p>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <h3 style="margin-bottom:1.2rem; color:#c4dceb;">📬 Fique por dentro</h3>
+        <form id="newsletterForm">
+            <input type="email" placeholder="Seu e-mail" required id="newsEmail">
+            <button type="submit">Inscrever</button>
+        </form>
+        <div id="newsStatus" style="margin-top:0.8rem; color:#8ab3cc;"></div>
+        <div style="margin-top:2rem; font-size:0.8rem; color:#3f6a7a;">Knitting Records™ · 2026 · Todos os direitos reservados (e alguns inventados)</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+    </script>
+    <script>
+        // ===== CONFIGURAÇÃO =====
+        const PUBLIC_KEY = 'poXvhuxicPEUuvv3l';
+        const SERVICE_ID = 'service_aghhy0c';
+        const TEMPLATE_ID = 'template_4n9je15';
+
+        (function() {
+            emailjs.init(PUBLIC_KEY);
+        })();
+
+        // ===== MENU =====
+        const hamburger = document.getElementById('hamburger');
+        const overlay = document.getElementById('menuOverlay');
+        const closeBtn = document.getElementById('closeMenu');
+
+        function openMenu() { overlay.classList.add('open'); }
+
+        function closeMenu() { overlay.classList.remove('open'); }
+
+        hamburger.addEventListener('click', openMenu);
+        closeBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeMenu(); });
+
+        document.querySelectorAll('.menu-panel a[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = link.dataset.section;
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                const target = document.getElementById(sectionId);
+                if (target) target.classList.add('active');
+                closeMenu();
+                if (sectionId === 'contato') {
+                    document.getElementById('formContato').classList.remove('hide');
+                    document.getElementById('formDemo').classList.add('hide');
+                    document.getElementById('btnContato').classList.add('active');
+                    document.getElementById('btnDemo').classList.remove('active');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // ===== TOGGLE CONTATO =====
+        const btnContato = document.getElementById('btnContato');
+        const btnDemo = document.getElementById('btnDemo');
+        const formContato = document.getElementById('formContato');
+        const formDemo = document.getElementById('formDemo');
+
+        btnContato.addEventListener('click', () => {
+            formContato.classList.remove('hide');
+            formDemo.classList.add('hide');
+            btnContato.classList.add('active');
+            btnDemo.classList.remove('active');
+        });
+
+        btnDemo.addEventListener('click', () => {
+            formDemo.classList.remove('hide');
+            formContato.classList.add('hide');
+            btnDemo.classList.add('active');
+            btnContato.classList.remove('active');
+        });
+
+        // ===== CONTATO =====
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('contactEmail').value.trim();
+            const subject = document.getElementById('contactSubject').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+
+            if (!email || !subject || !message) {
+                document.getElementById('contactStatus').innerHTML = '<span style="color:#d99;">Preencha todos os campos.</span>';
+                return;
+            }
+
+            const templateParams = {
+                title: subject,
+                name: email,
+                message: message
+            };
+
+            emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+                .then(() => {
+                    document.getElementById('contactStatus').innerHTML = '<div class="msg-sucesso">✅ Mensagem enviada! Responderemos em breve.</div>';
+                    document.getElementById('contactForm').reset();
+                })
+                .catch((err) => {
+                    document.getElementById('contactStatus').innerHTML =
+                        `<span style="color:#d99;">Erro ao enviar: ${err.text || 'tente novamente'}</span>`;
+                });
+        });
+
+        // ===== DEMO =====
+        document.getElementById('demoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nomeMusica = document.getElementById('demoNomeMusica').value.trim();
+            const artistico = document.getElementById('demoArtistico').value.trim();
+            const genero = document.getElementById('demoGenero').value;
+            const nomeCompleto = document.getElementById('demoNomeCompleto').value.trim();
+            const objetivo = document.getElementById('demoObjetivo').value;
+            const pretende = document.getElementById('demoPretende').value.trim();
+            const email = document.getElementById('demoEmail').value.trim();
+            const link = document.getElementById('demoLink').value.trim();
+
+            if (!nomeMusica || !artistico || !nomeCompleto || !pretende || !email || !link) {
+                document.getElementById('demoStatus').innerHTML = '<span style="color:#d99;">Preencha todos os campos.</span>';
+                return;
+            }
+
+            const msg =
+                `${nomeMusica}, ${artistico}, ${genero}, ${nomeCompleto}, ${objetivo}, ${pretende}, ${email}, ${link}`;
+
+            const templateParams = {
+                title: 'Nova Demo!',
+                name: artistico,
+                message: msg
+            };
+
+            emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+                .then(() => {
+                    document.getElementById('demoStatus').innerHTML =
+                        '<div class="msg-sucesso">🎉 Obrigado! Nosso A&R irá analisar e responder em até 72hrs.</div>';
+                    document.getElementById('demoForm').reset();
+                })
+                .catch((err) => {
+                    document.getElementById('demoStatus').innerHTML =
+                        `<span style="color:#d99;">Erro ao enviar demo: ${err.text || 'tente novamente'}</span>`;
+                });
+        });
+
+        // ===== NEWSLETTER =====
+        document.getElementById('newsletterForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('newsEmail').value.trim();
+            const status = document.getElementById('newsStatus');
+            if (email) {
+                status.innerHTML = '📬 Obrigado! Você receberá nossas novidades.';
+                document.getElementById('newsEmail').value = '';
+            } else {
+                status.innerHTML = 'Digite um e-mail válido.';
+            }
+        });
+    </script>
+</body>
+</html>
