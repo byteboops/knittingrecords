@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1a29" />
+  <meta name="description" content="Knitting Records™ — gravadora independente. Pagode, sertanejo, hip hop e montagem/funk." />
+  <title>Knitting Records™ — Gravadora Independente</title>
+
+  <link rel="icon" href="icons/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/favicon.png" />
+  <link rel="manifest" href="assets/manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/style.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/app.js"></script>
+</head>
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="navbar" role="banner">
+    <a class="brand" href="#" data-section="inicio" aria-label="Início">
+      <img src="https://cdn.imageurlgenerator.com/uploads/497d07b9-cb76-4c9b-9971-cb08d44a5880.png" alt="Logo Knitting Records" />
+      <span class="brand-name">Knitting Records<sup>™</sup></span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Navegação principal">
+      <a href="#" data-section="inicio">Início</a>
+      <a href="#" data-section="noticias">Notícias</a>
+      <a href="#" data-section="artistas">Artistas</a>
+      <a href="#" data-section="lancamentos">Lançamentos</a>
+      <a href="#" data-section="historia">História</a>
+      <a href="#" data-section="contato">Contato</a>
+    </nav>
+
+    <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuOverlay">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ================= MENU OVERLAY ================= -->
+  <div class="menu-overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+    <nav class="menu-panel">
+      <a href="#" data-section="inicio">Início</a>
+      <a href="#" data-section="noticias">Notícias</a>
+      <a href="#" data-section="artistas">Artistas</a>
+      <a href="#" data-section="lancamentos">Lançamentos</a>
+      <a href="#" data-section="historia">História</a>
+      <a href="#" data-section="contato">Contato</a>
+      <button class="close-menu" id="closeMenu" aria-label="Fechar menu">✕ Fechar</button>
+    </nav>
+  </div>
+
+  <!-- ================= MAIN ================= -->
+  <main class="container" id="main">
+
+    <!-- INÍCIO -->
+    <section id="inicio" class="section active">
+      <div class="hero">
+        <p class="eyebrow">Gravadora independente · desde junho de 2026</p>
+        <h1>A nova gravadora com alma de moleque.</h1>
+        <p class="hero-sub">
+          Pagode, sertanejo, hip hop e montagem/funk. Distribuição, cessões e parcerias
+          com artistas que querem fazer história.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-section="contato">Envie sua demo</button>
+          <button class="btn btn-ghost" data-section="lancamentos">Ver lançamentos</button>
+        </div>
+        <div class="chips">
+          <span class="chip">🔥 Pagode</span>
+          <span class="chip">🎸 Sertanejo</span>
+          <span class="chip">🎤 Hip Hop</span>
+          <span class="chip">🔊 Montagem/Funk</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTÍCIAS -->
+    <section id="noticias" class="section">
+      <header class="section-head">
+        <h2>Notícias</h2>
+        <p>O que está acontecendo na Knitting.</p>
+      </header>
+
+      <div class="card-grid">
+        <article class="news-card">
+          <h3>Knitting Records Surge</h3>
+          <p>Tudo preparado para distribuições, cessões e novas parcerias com artistas.</p>
+        </article>
+
+        <article class="news-card">
+          <h3>Knitting Records assina com Davi Luiz</h3>
+          <p>Nome artístico e gênero ainda estão sendo discutidos.</p>
+        </article>
+
+        <article class="news-card">
+          <h3>Knitting Records assina com Ricardo</h3>
+          <p>Gênero funk. Nome artístico em definição, primeiro lançamento em discussão.</p>
+        </article>
+
+        <article class="news-card">
+          <h3>Lançamento sendo preparado</h3>
+          <p>“Não Peido Mais Molhado” conta a história de viver feliz com a cueca limpa — com Spotify Canvas e videoclipe.</p>
+        </article>
+
+        <article class="news-card news-card--media">
+          <img src="peido.jpg" alt="Capa de Não Peido Mais Molhado" />
+          <div>
+            <h3>Novo lançamento</h3>
+            <p>“Não Peido Mais Molhado” já está em todas as plataformas. Ouça no Spotify.</p>
+          </div>
+        </article>
+
+        <article class="news-card news-card--media">
+          <img src="nobody.png" alt="Capa de MONTAGEM NOBODY" />
+          <div>
+            <h3>Novo lançamento de Knitting Cat</h3>
+            <p>MONTAGEM NOBODY, EP de 4 faixas de brazilian phonk, chega em +480 plataformas em 23 de outubro.</p>
+          </div>
+        </article>
+
+        <article class="news-card">
+          <h3>MONTAGEM NOBODY chega às plataformas</h3>
+          <p>Ouça já — link do Spotify na seção de lançamentos.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ARTISTAS -->
+    <section id="artistas" class="section">
+      <header class="section-head">
+        <h2>Artistas</h2>
+        <p>Clique em um artista para ver o catálogo de releases.</p>
+      </header>
+
+      <div class="artist-grid" id="artistGrid">
+        <!-- preenchido via JS -->
+      </div>
+    </section>
+
+    <!-- LANÇAMENTOS -->
+    <section id="lancamentos" class="section">
+      <header class="section-head">
+        <h2>Lançamentos</h2>
+        <p>Ouça as faixas direto no player.</p>
+      </header>
+
+      <div class="card-grid" id="releaseGrid">
+        <!-- preenchido via JS -->
+      </div>
+    </section>
+
+    <!-- HISTÓRIA -->
+    <section id="historia" class="section">
+      <header class="section-head">
+        <h2>Nossa história</h2>
+      </header>
+      <div class="prose">
+        <p>
+          A Knitting Records nasceu em junho de 2026, quando um moleque de 11 anos que entendia do papo
+          descobriu que um de seus amigos também queria fazer música.
+        </p>
+        <p>
+          Os moleques ainda são crianças, mas já está tudo planejado. A ideia começou simples: uma distribuidora
+          restrita a esse amigo. E agora se tornou uma gravadora de braços abertos para qualquer colega que
+          queira fazer músicas.
+        </p>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" class="section">
+      <header class="section-head">
+        <h2>Contato</h2>
+        <p>Fale com a gente ou envie sua demo.</p>
+      </header>
+
+      <div class="toggle-contato" role="tablist">
+        <button id="btnContato" class="active" role="tab" aria-selected="true">Contate-nos</button>
+        <button id="btnDemo" role="tab" aria-selected="false">Envie sua demo</button>
+      </div>
+
+      <div id="formContato" class="form-box">
+        <h3>✉️ Fale com a gente</h3>
+        <form id="contactForm" novalidate>
+          <div class="form-group">
+            <label for="contactEmail">Seu e-mail</label>
+            <input type="email" id="contactEmail" placeholder="voce@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="contactSubject">Assunto</label>
+            <input type="text" id="contactSubject" placeholder="Assunto da mensagem" required />
+          </div>
+          <div class="form-group">
+            <label for="contactMessage">Mensagem</label>
+            <textarea id="contactMessage" placeholder="Escreva sua mensagem..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+          <div id="contactStatus" class="status" aria-live="polite"></div>
+        </form>
+      </div>
+
+      <div id="formDemo" class="form-box hide">
+        <h3>🎧 Envie sua demo</h3>
+        <form id="demoForm" novalidate>
+          <div class="form-group">
+            <label for="demoNomeMusica">Nome da música</label>
+            <input type="text" id="demoNomeMusica" required />
+          </div>
+          <div class="form-group">
+            <label for="demoArtistico">Nome artístico</label>
+            <input type="text" id="demoArtistico" required />
+          </div>
+          <div class="form-group">
+            <label for="demoGenero">Gênero</label>
+            <select id="demoGenero">
+              <option>Pagode</option>
+              <option>Sertanejo</option>
+              <option>Hip Hop</option>
+              <option>Montagem/Funk</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="demoNomeCompleto">Nome completo</label>
+            <input type="text" id="demoNomeCompleto" required />
+          </div>
+          <div class="form-group">
+            <label for="demoObjetivo">Objetivo</label>
+            <select id="demoObjetivo">
+              <option>Conseguir gravadora</option>
+              <option>Só demo para divulgação</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="demoPretende">O que pretende fazer com essa demo?</label>
+            <input type="text" id="demoPretende" placeholder="ex: mostrar ao mercado" required />
+          </div>
+          <div class="form-group">
+            <label for="demoEmail">E-mail</label>
+            <input type="email" id="demoEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="demoLink">Link (SoundCloud ou YouTube)</label>
+            <input type="url" id="demoLink" placeholder="https://..." required />
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar demo</button>
+          <div id="demoStatus" class="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= MODAL ARTISTA ================= -->
+  <div class="modal-overlay" id="artistModal" role="dialog" aria-modal="true" aria-labelledby="artistModalTitle">
+    <div class="modal">
+      <button class="modal-close" id="artistModalClose" aria-label="Fechar">✕</button>
+      <div class="modal-head">
+        <img id="artistModalImg" alt="" class="modal-avatar" />
+        <div>
+          <h3 id="artistModalTitle"></h3>
+          <p id="artistModalGenre" class="muted"></p>
+          <a id="artistModalSpotify" class="btn btn-spotify" target="_blank" rel="noopener">
+            <i class="fa-brands fa-spotify"></i> Ver no Spotify
+          </a>
+        </div>
+      </div>
+      <h4 class="modal-subtitle">Catálogo de releases</h4>
+      <div id="artistModalReleases" class="catalog"></div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="rodape">
+    <h3>📬 Fique por dentro</h3>
+    <form id="newsletterForm" class="newsletter" novalidate>
+      <input type="email" placeholder="Seu e-mail" required id="newsEmail" />
+      <button type="submit" class="btn btn-primary">Inscrever</button>
+    </form>
+    <div id="newsStatus" class="status" aria-live="polite"></div>
+    <p class="footer-note">DeepSeek AI Co., Ltd.</p>
+  </footer>
+</body>
+</html>
