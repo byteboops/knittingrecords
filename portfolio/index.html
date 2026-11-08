@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KNITTING RECORDS™ · PORTFÓLIO</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="knitting.png">
+    <!-- Google Fonts + Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -47,6 +50,7 @@
             padding: 0 2rem;
         }
 
+        /* HEADER */
         header {
             position: sticky;
             top: 0;
@@ -120,6 +124,7 @@
             border-bottom-color: var(--knitting-gold);
         }
 
+        /* HERO */
         .hero {
             padding: 5rem 0 4rem;
             background: radial-gradient(circle at 30% 30%, #1a1a1a 0%, #0a0a0a 80%);
@@ -234,6 +239,7 @@
             font-size: 0.7rem;
         }
 
+        /* TUCANO SECTION */
         .tucano-section {
             background: linear-gradient(145deg, #0F2A1F 0%, #1B4D3E 100%);
             border-bottom: 2px solid var(--tucano-sun);
@@ -287,6 +293,14 @@
         .tucano-leaf-icon {
             color: var(--tucano-sun);
             margin-right: 6px;
+        }
+
+        /* Imagem tucano */
+        .tucano-img {
+            display: block;
+            max-width: 180px;
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
         }
 
         .stat-grid {
@@ -369,6 +383,9 @@
             .logo-img {
                 height: 36px;
             }
+            .tucano-img {
+                max-width: 120px;
+            }
         }
 
         .divider-gold {
@@ -394,6 +411,7 @@
     <header>
         <div class="container header-inner">
             <div class="logo-area">
+                <!-- Logo Knitting Records -->
                 <img src="knitting.png" alt="Knitting Records" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <div class="logo-text" style="display: none;">KNITTING<span>RECORDS™</span></div>
                 <div class="logo-text">KNITTING<span>RECORDS™</span></div>
@@ -456,8 +474,11 @@
         </div>
     </section>
 
+    <!-- TUCANO MÚSICA com imagem tucano.png -->
     <section id="tucano" class="tucano-section">
         <div class="container">
+            <!-- Imagem tucano.png (adicionada) -->
+            <img src="tucano.png" alt="Tucano Música" class="tucano-img" onerror="this.style.display='none';">
             <span class="tucano-badge"><i class="fas fa-leaf tucano-leaf-icon"></i> braço de distribuição digital</span>
             <h2 class="section-title" style="color: #fff;">Tucano Música</h2>
             <div class="grid-2col">
