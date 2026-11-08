@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNITTING RECORDS™ · PORTFÓLIO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #f0f0f0;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --knitting-gold: #C9A03D;
+            --knitting-gold-light: #E7C66B;
+            --knitting-black: #0B0B0B;
+            --knitting-dark: #121212;
+            --knitting-gray: #1E1E1E;
+            --knitting-text: #E0E0E0;
+            --tucano-green: #1B4D3E;
+            --tucano-leaf: #2E7D5E;
+            --tucano-sun: #F4B942;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 11, 11, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(201, 160, 61, 0.25);
+            padding: 1rem 0;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            height: 48px;
+            width: auto;
+            filter: drop-shadow(0 0 6px rgba(201, 160, 61, 0.5));
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.03em;
+            color: var(--knitting-gold);
+            text-transform: uppercase;
+            border-left: 2px solid var(--knitting-gold);
+            padding-left: 1rem;
+        }
+
+        .logo-text span {
+            color: #fff;
+            font-weight: 300;
+            font-size: 0.9rem;
+            display: block;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #aaa;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.2s;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 4px;
+        }
+
+        .nav-links a:hover {
+            color: var(--knitting-gold);
+            border-bottom-color: var(--knitting-gold);
+        }
+
+        .hero {
+            padding: 5rem 0 4rem;
+            background: radial-gradient(circle at 30% 30%, #1a1a1a 0%, #0a0a0a 80%);
+            border-bottom: 1px solid rgba(201, 160, 61, 0.15);
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .hero-badge {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--knitting-gold);
+            border: 1px solid rgba(201, 160, 61, 0.4);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            font-weight: 700;
+            max-width: 900px;
+            background: linear-gradient(135deg, #fff 0%, #C9A03D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #aaa;
+            max-width: 700px;
+            font-weight: 300;
+        }
+
+        section {
+            padding: 4rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 60px;
+            height: 3px;
+            background: var(--knitting-gold);
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .card {
+            background: var(--knitting-gray);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(201, 160, 61, 0.15);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(201, 160, 61, 0.4);
+            transform: translateY(-4px);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--knitting-gold-light);
+        }
+
+        .card p {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+
+        .list-styled {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .list-styled li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .list-styled li i {
+            color: var(--knitting-gold);
+            font-size: 0.7rem;
+        }
+
+        .tucano-section {
+            background: linear-gradient(145deg, #0F2A1F 0%, #1B4D3E 100%);
+            border-bottom: 2px solid var(--tucano-sun);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tucano-section::before {
+            content: "🌿";
+            position: absolute;
+            font-size: 20rem;
+            opacity: 0.05;
+            bottom: -5rem;
+            right: -3rem;
+            transform: rotate(15deg);
+            pointer-events: none;
+        }
+
+        .tucano-section .section-title::after {
+            background: var(--tucano-sun);
+        }
+
+        .tucano-section .card {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(244, 185, 66, 0.3);
+        }
+
+        .tucano-section .card h3 {
+            color: var(--tucano-sun);
+        }
+
+        .tucano-section .list-styled li i {
+            color: var(--tucano-sun);
+        }
+
+        .tucano-badge {
+            display: inline-block;
+            background: var(--tucano-leaf);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid var(--tucano-sun);
+        }
+
+        .tucano-leaf-icon {
+            color: var(--tucano-sun);
+            margin-right: 6px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(201,160,61,0.1);
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--knitting-gold);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #999;
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            padding: 3rem 0;
+            background: #050505;
+            border-top: 1px solid rgba(201,160,61,0.2);
+            text-align: center;
+            color: #777;
+            font-size: 0.85rem;
+        }
+
+        footer .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            color: var(--knitting-gold);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 1.2rem;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .logo-text {
+                font-size: 1rem;
+            }
+            .logo-img {
+                height: 36px;
+            }
+        }
+
+        .divider-gold {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--knitting-gold), transparent);
+            margin: 1.5rem 0;
+            opacity: 0.3;
+        }
+
+        .highlight-gold {
+            color: var(--knitting-gold-light);
+            font-weight: 500;
+        }
+
+        .highlight-tucano {
+            color: var(--tucano-sun);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-inner">
+            <div class="logo-area">
+                <img src="knitting.png" alt="Knitting Records" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="logo-text" style="display: none;">KNITTING<span>RECORDS™</span></div>
+                <div class="logo-text">KNITTING<span>RECORDS™</span></div>
+            </div>
+            <div class="nav-links">
+                <a href="#knitting">Knitting</a>
+                <a href="#tucano">Tucano Música</a>
+                <a href="#producao">Produção</a>
+                <a href="#servicos">Serviços</a>
+                <a href="#marketing">Marketing</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <span class="hero-badge">ECOSSISTEMA CRIATIVO</span>
+            <h1>KNITTING RECORDS™</h1>
+            <p>Gravadora, produtora, distribuidora e laboratório de ideias. Um ecossistema completo que une arte, técnica, tecnologia e gestão — tudo em um só lugar.</p>
+            <div class="stat-grid" style="width:100%; margin-top:1rem;">
+                <div class="stat-item">
+                    <div class="stat-number">CEO</div>
+                    <div class="stat-label">produtor musical</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">480</div>
+                    <div class="stat-label">plataformas máx.</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">-9 a -14</div>
+                    <div class="stat-label">LUFS emocional</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="knitting">
+        <div class="container">
+            <h2 class="section-title">A estrutura da gravadora</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Modelo de negócios</h3>
+                    <p>A Knitting Records™ opera com um modelo flexível e moderno, negociando caso a caso com cada artista. Atuamos desde o licenciamento de uma faixa até a gestão completa de carreira, sempre alinhando expectativas e entregas.</p>
+                    <ul class="list-styled" style="margin-top:1.2rem;">
+                        <li><i class="fas fa-circle"></i> Licenciamento de músicas</li>
+                        <li><i class="fas fa-circle"></i> Serviços de masterização</li>
+                        <li><i class="fas fa-circle"></i> Distribuição digital completa</li>
+                        <li><i class="fas fa-circle"></i> Material de divulgação</li>
+                        <li><i class="fas fa-circle"></i> Gestão de carreira por inteiro</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Operação financeira e distribuição</h3>
+                    <p>A gestão financeira é realizada pelo Banco Inter, enquanto a distribuição fica a cargo das distribuidoras Lantuns e SRC Music, garantindo alcance e profissionalismo em cada lançamento.</p>
+                    <div class="divider-gold"></div>
+                    <p><span class="highlight-gold">✦</span> Cada parceria é construída com transparência e alinhamento artístico.</p>
+                    <p style="margin-top:1rem;"><span class="highlight-gold">✦</span> A Knitting Records™ se inspira na Sony Music Entertainment e em sua distribuidora The Orchard: artistas independentes podem usar a Tucano sem serem da Knitting, e artistas da Knitting podem distribuir via Tucano ou diretamente pela gravadora.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tucano" class="tucano-section">
+        <div class="container">
+            <span class="tucano-badge"><i class="fas fa-leaf tucano-leaf-icon"></i> braço de distribuição digital</span>
+            <h2 class="section-title" style="color: #fff;">Tucano Música</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Plataforma oficial de distribuição</h3>
+                    <p>A Tucano Música nasceu como uma distribuidora restrita, mas cresceu e se tornou a plataforma oficial de distribuição para artistas. Um ecossistema completo, construído do zero.</p>
+                    <ul class="list-styled" style="margin-top:1.2rem;">
+                        <li><i class="fas fa-tree"></i> SPA construído com HTML, CSS e JavaScript puro</li>
+                        <li><i class="fas fa-tree"></i> Backend no Supabase (banco de dados + armazenamento)</li>
+                        <li><i class="fas fa-tree"></i> Hospedagem na Vercel</li>
+                        <li><i class="fas fa-tree"></i> App Windows via Electron (.exe) e PWA para celular</li>
+                        <li><i class="fas fa-tree"></i> Arquitetura à prova de atualizações</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Fluxo e dashboard</h3>
+                    <p>O artista faz sua candidatura enviando dados, foto do rosto, foto em frente ao estúdio e, opcionalmente, uma música. Após aprovação, tem acesso ao dashboard para criar lançamentos (Single, EP ou Álbum).</p>
+                    <ul class="list-styled" style="margin-top:1.2rem;">
+                        <li><i class="fas fa-check-circle"></i> Capa obrigatória PNG/JPG 3000x3000 px</li>
+                        <li><i class="fas fa-check-circle"></i> Áudio MP3/WAV entre 30s e 45min</li>
+                        <li><i class="fas fa-check-circle"></i> Data de lançamento com 14 dias de antecedência</li>
+                        <li><i class="fas fa-check-circle"></i> Videoclipes com validação e 28 dias mínimos</li>
+                        <li><i class="fas fa-check-circle"></i> Status em tempo real: Revisão, Aprovado ou Rejeitado</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid-2col" style="margin-top:2rem;">
+                <div class="card">
+                    <h3>Equipe e operação</h3>
+                    <p>Nicolas é o responsável pelo suporte da Tucano. O e-mail de atendimento é <span class="highlight-tucano">ncolassuport@gmail.com</span>.</p>
+                    <div class="divider-gold" style="background:var(--tucano-sun); opacity:0.2;"></div>
+                    <p><i class="fas fa-seedling" style="color:var(--tucano-sun);"></i> Próximos passos: Política de Privacidade, tela de aviso sobre análise de lançamentos e versões Android (.apk).</p>
+                </div>
+                <div class="card">
+                    <h3>Serviços da Knitting na gestão de carreira</h3>
+                    <ul class="list-styled">
+                        <li><i class="fas fa-music"></i> Produção musical</li>
+                        <li><i class="fas fa-sliders-h"></i> Mixagem (distorção, saturação, chorus, reverb, EQ, compressão)</li>
+                        <li><i class="fas fa-chart-line"></i> Masterização com LUFS, fita, limitação e toque final</li>
+                        <li><i class="fas fa-file-audio"></i> Exportação em WAV 32 bits 48kHz</li>
+                        <li><i class="fas fa-globe"></i> Distribuição em até 480 plataformas</li>
+                        <li><i class="fas fa-bullhorn"></i> Marketing e técnicas de viralização</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="producao">
+        <div class="container">
+            <h2 class="section-title">Produção musical & engenharia de áudio</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Do celular ao estúdio</h3>
+                    <p>Comecei a produzir no celular com BandLab, aprendendo a fazer muito com pouco. Depois migrei para o FL Studio e dei um salto gigante na qualidade. Baixei plugins profissionais de equalização, compressão, saturação e limitação — qualidade de áudio de nível industrial.</p>
+                    <div class="divider-gold"></div>
+                    <p><span class="highlight-gold">✦</span> Domínio da escala LUFS e comportamento de formatos de áudio.</p>
+                    <p><span class="highlight-gold">✦</span> Masterização em tempo real, testada em múltiplos dispositivos e ambientes.</p>
+                    <p><span class="highlight-gold">✦</span> Conheço a clássica ordem dos engenheiros: EQ, compressor, EQ.</p>
+                </div>
+                <div class="card">
+                    <h3>LUFS como emoção</h3>
+                    <p>O LUFS não é só uma escala científica de volume — ele representa emoções. As plataformas trabalham entre -9 e -14 LUFS.</p>
+                    <ul class="list-styled" style="margin-top:1.2rem;">
+                        <li><i class="fas fa-sun"></i> Dançante, alegre e bom de ouvir → <strong style="color:var(--knitting-gold);">-9 LUFS</strong></li>
+                        <li><i class="fas fa-moon"></i> Obscuro, profundo e introspectivo → <strong style="color:var(--knitting-gold);">-14 LUFS</strong></li>
+                        <li><i class="fas fa-wave-square"></i> Ajuste fino para cada sensação</li>
+                    </ul>
+                    <p style="margin-top:1rem;">O LUFS serve para medir volume e emoção — e eu uso isso a favor da arte.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2 class="section-title">Tecnologia & desenvolvimento</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Distribuição digital e padrões</h3>
+                    <p>Entendo profundamente a distribuição digital e os padrões da indústria musical, incluindo metadados (DDEX), APIs, JSON e XML. Uso inteligência artificial (DeepSeek) como copiloto para escrever códigos e construir ferramentas para a gravadora, como o painel de artista.</p>
+                    <ul class="list-styled" style="margin-top:1.2rem;">
+                        <li><i class="fas fa-code"></i> SPA com HTML, CSS e JavaScript puro</li>
+                        <li><i class="fas fa-database"></i> Supabase (banco + storage)</li>
+                        <li><i class="fas fa-cloud"></i> Vercel (hospedagem)</li>
+                        <li><i class="fas fa-mobile-alt"></i> PWA + Electron (.exe)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Ecossistema completo</h3>
+                    <p>A arquitetura foi pensada para que o HTML seja a fonte de verdade das contas, enquanto o localStorage salva apenas o delta de mudanças de estado — lançamentos e atualizações. Assim o sistema não quebra se o código for atualizado.</p>
+                    <div class="divider-gold"></div>
+                    <p><span class="highlight-gold">✦</span> Validações pesadas no navegador para capa, áudio e datas.</p>
+                    <p><span class="highlight-gold">✦</span> Uploads diretos para o Supabase com status em tempo real.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2 class="section-title">Lançamentos & artistas</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Primeiro lançamento</h3>
+                    <p>O primeiro lançamento foi um funk carioca humorado do Ricardo. A música já está distribuída nas plataformas, rendendo streams, e ele está divulgando.</p>
+                    <div class="divider-gold"></div>
+                    <p><i class="fas fa-chart-simple" style="color:var(--knitting-gold);"></i> Outros artistas já estão no time, com lançamentos aprovados e distribuídos.</p>
+                </div>
+                <div class="card">
+                    <h3>Álbum de estreia</h3>
+                    <p>Estamos trabalhando na produção do álbum de estreia de um grupo de amigos para um canal no YouTube. Para cada integrante, aplico um gênero musical diferente, incluindo rap e k-pop.</p>
+                    <div class="divider-gold"></div>
+                    <p><span class="highlight-gold">✦</span> Produção sob medida, identidade única para cada artista.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="servicos">
+        <div class="container">
+            <h2 class="section-title">Serviços que a gravadora cobre</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Produção e áudio</h3>
+                    <ul class="list-styled">
+                        <li><i class="fas fa-check"></i> Produção musical</li>
+                        <li><i class="fas fa-check"></i> Mixagem com distorção, saturação, chorus, reverb, EQ e compressão</li>
+                        <li><i class="fas fa-check"></i> Masterização com EQ, limitação, compressão, saturação, simulador de fita, medidor LUFS e reverb de fundo opcional</li>
+                        <li><i class="fas fa-check"></i> Exportação WAV Little Endian 32 bits 48,0 kHz</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Distribuição e marketing</h3>
+                    <ul class="list-styled">
+                        <li><i class="fas fa-check"></i> Distribuição em até 480 plataformas</li>
+                        <li><i class="fas fa-check"></i> Marketing e técnicas de viralização (sem canibalizar lançamentos)</li>
+                        <li><i class="fas fa-check"></i> Gestão de perfil Spotify for Artists</li>
+                        <li><i class="fas fa-check"></i> Canvas e distribuição de videoclipes</li>
+                    </ul>
+                    <div class="divider-gold"></div>
+                    <p><i class="fas fa-microphone" style="color:var(--knitting-gold);"></i> O artista só precisa gravar em local sem eco e sem barulho de fundo, seguindo as ideias do A&R.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="marketing">
+        <div class="container">
+            <h2 class="section-title">Marketing & criatividade</h2>
+            <div class="grid-2col">
+                <div class="card">
+                    <h3>Internet a nosso favor</h3>
+                    <p>Entendo as trends do TikTok e como os vídeos precisam ser para viralizar. Uso humor e criatividade na diplomacia — como quando criei um vídeo me vestindo de rei em um trono pedindo "régia vênia" para o pai do Ricardo, que é muito brigão, só para liberar meu amigo para gravar no estúdio.</p>
+                </div>
+                <div class="card">
+                    <h3>Rotina e inspiração</h3>
+                    <p>Concilio toda a rotina de CEO, produtor e gestor com os meus outros compromissos. Também cuido do meu gato.</p>
+                    <div class="divider-gold"></div>
+                    <p><span class="highlight-gold">✦</span> A Knitting Records se inspira na Sony Music Entertainment e na The Orchard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-logo">KNITTING RECORDS™</div>
+            <p>Ecossistema criativo · Produção · Distribuição · Gestão</p>
+        </div>
+    </footer>
+
+</body>
+</html>
