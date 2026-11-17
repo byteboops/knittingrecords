@@ -1,439 +1,215 @@
-/* ============================================================
-   KNITTING RECORDS — app.js
-   Envio de formulários em .txt para o bucket "releases"
-============================================================ */
+/* Knitting Records — site behavior */
+(() => {
+  'use strict';
 
-/* ------------------------------------------------------------
-   1) SUPABASE
------------------------------------------------------------- */
-const SUPABASE_URL = 'https://mjqwiqjojkzobuysziyv.supabase.co';
-const SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcXdpcWpvamt6b2J1eXN6aXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3Nzc4MzMsImV4cCI6MjEwNjM1MzgzM30.w4zDJdmAOmZBnvfXHZ3YDu2qfiUs_gSOnccY0S2ahG8';
+  const SUPABASE_URL = 'https://mjqwiqjojkzobuysziyv.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcXdpcWpvamt6b2J1eXN6aXl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3Nzc4MzMsImV4cCI6MjEwNjM1MzgzMH0.w4zDJdmAOmZBnvfXHZ3YDu2qfiUs_gSOnccY0S2ahG8';
+  const BUCKET = 'releases';
+  const artists = [
+    { id: 'ricardo', nome: 'Ricardo', genero: 'Funk', imagem: 'covers/ricardo/sol.jpeg', spotify: 'https://open.spotify.com/intl-pt/artist/7ES8xIBdUgDCDSzGRNAUfk' },
+    { id: 'knitting-cat', nome: 'Knitting Cat', genero: 'Brazilian Phonk / Montagem', imagem: 'covers/knitting_cat/knitting_cat.png', spotify: 'https://open.spotify.com/intl-pt/artist/358ZWEMsgWuPS1TAhsmoTy' }
+  ];
+  const releases = [
+    { id: 'nao-peido-mais-molhado', titulo: 'Não Peido Mais Molhado', artistaId: 'ricardo', capa: 'covers/ricardo/peido/peido.jpeg', spotify: 'https://open.spotify.com/album/3lIf9GUK5ql9aJAb5Ij5Eb', tracks: [] },
+    { id: 'montagem-nobody', titulo: 'MONTAGEM NOBODY', artistaId: 'knitting-cat', capa: 'covers/knitting_cat/nobody/nobody.png', spotify: 'https://open.spotify.com/intl-pt/album/7iabqPw3Zh7491B7iZxsXd', tracks: [
+      { nome: 'MONTAGEM NOBODY', src: 'audio/knitting_cat/nobody/nobody.mp3' },
+      { nome: 'Faixa 2 (Slowed)', src: 'audio/knitting_cat/nobody/slowed.mp3' },
+      { nome: 'Faixa 3 (Super Slowed)', src: 'audio/knitting_cat/nobody/super_slowed.mp3' },
+      { nome: 'Faixa 4 (Sped Up)', src: 'audio/knitting_cat/nobody/spedup.mp3' }
+    ] }
+  ];
 
-const BUCKET = 'releases';
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const artistById = id => artists.find(artist => artist.id === id);
+  const assetUrl = path => new URL(path, document.baseURI).href;
+  const audio = new Audio();
+  audio.preload = 'none';
+  let currentTrack = null;
+  let supabaseClient = null;
 
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ------------------------------------------------------------
-   2) DADOS (mock)
------------------------------------------------------------- */
-const ARTISTS = [
-  {
-    id: 'ricardo',
-    nome: 'Ricardo',
-    genero: 'Funk',
-    imagem: 'covers/ricardo/sol.jpg',
-    spotify: 'https://open.spotify.com/intl-pt/artist/7ES8xIBdUgDCDSzGRNAUfk?si=f2fxazB2QaeTGlLk3kKcvw'
-  },
-  {
-    id: 'knitting-cat',
-    nome: 'Knitting Cat',
-    genero: 'Brazilian Phonk / Montagem',
-    imagem: 'covers/knitting_cat/knitting_cat.png',
-    spotify: 'https://open.spotify.com/intl-pt/artist/358ZWEMsgWuPS1TAhsmoTy?si=4XjnXwMjSyu0c6jhJkXMQA'
-  },
-  {
-    id: 'davi-luiz',
-    nome: 'Davi Luiz',
-    genero: 'Em definição',
-    imagem: 'https://cdn.imageurlgenerator.com/uploads/497d07b9-cb76-4c9b-9971-cb08d44a5880.png',
-    spotify: 'https://open.spotify.com/intl-pt/artist/PREENCHA_AQUI'
-  }
-];
-
-const RELEASES = [
-  {
-    id: 'nao-peido-mais-molhado',
-    titulo: 'Não Peido Mais Molhado',
-    artistaId: 'ricardo',
-    capa: 'covers/ricardo/peido/peido.jpg',
-    spotify: 'https://open.spotify.com/album/3lIf9GUK5ql9aJAb5Ij5Eb',
-    tracks: [
-      { nome: 'Não Peido Mais Molhado', src: '' }
-    ]
-  },
-  {
-    id: 'montagem-nobody',
-    titulo: 'MONTAGEM NOBODY',
-    artistaId: 'knitting-cat',
-    capa: 'covers/knitting_cat/nobody/nobody.png',
-    spotify: 'https://open.spotify.com/intl-pt/album/7iabqPw3Zh7491B7iZxsXd',
-    tracks: [
-      { nome: 'MONTAGEM NOBODY', src: 'audio/knitting_cat/nobody/nobody.wav' },
-      { nome: 'Faixa 2', src: 'audio/knitting_cat/nobody/slowed.wav' },
-      { nome: 'Faixa 3', src: 'audio/knitting_cat/nobody/super_slowed.wav' },
-      { nome: 'Faixa 4', src: 'audio/knitting_cat/nobody/spedup.wav' }
-    ]
-  }
-];
-
-const $  = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-const artistById = (id) => ARTISTS.find(a => a.id === id);
-
-/* ------------------------------------------------------------
-   3) NAVEGAÇÃO / MENU
------------------------------------------------------------- */
-const hamburger = $('#hamburger');
-const overlay   = $('#menuOverlay');
-const closeBtn  = $('#closeMenu');
-
-function openMenu() {
-  overlay.classList.add('open');
-  hamburger.setAttribute('aria-expanded', 'true');
-}
-function closeMenu() {
-  overlay.classList.remove('open');
-  hamburger.setAttribute('aria-expanded', 'false');
-}
-hamburger.addEventListener('click', () =>
-  overlay.classList.contains('open') ? closeMenu() : openMenu()
-);
-closeBtn.addEventListener('click', closeMenu);
-overlay.addEventListener('click', (e) => { if (e.target === overlay) closeMenu(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
-
-function showSection(id) {
-  $$('.section').forEach(sec => sec.classList.remove('active'));
-  const target = document.getElementById(id);
-  if (target) target.classList.add('active');
-
-  if (id === 'contato') {
-    $('#formContato')?.classList.remove('hide');
-    $('#formDemo')?.classList.add('hide');
-    $('#btnContato')?.classList.add('active');
-    $('#btnDemo')?.classList.remove('active');
+  function setStatus(element, message, type = '') {
+    if (!element) return;
+    element.textContent = message;
+    element.className = `status${type ? ` ${type}` : ''}`;
   }
 
-  closeMenu();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  function switchContactTab(demo) {
+    $('#formContato')?.classList.toggle('hide', demo);
+    $('#formDemo')?.classList.toggle('hide', !demo);
+    $('#btnContato')?.classList.toggle('active', !demo);
+    $('#btnDemo')?.classList.toggle('active', demo);
+    $('#btnContato')?.setAttribute('aria-selected', String(!demo));
+    $('#btnDemo')?.setAttribute('aria-selected', String(demo));
+  }
 
-$$('[data-section]').forEach(el => {
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSection(el.dataset.section);
-  });
-});
+  function showSection(id) {
+    const target = document.getElementById(id);
+    if (!target?.classList.contains('section')) return;
+    $$('.section').forEach(section => section.classList.toggle('active', section === target));
+    if (id === 'contato') switchContactTab(false);
+    $('#menuOverlay')?.classList.remove('open');
+    $('#hamburger')?.setAttribute('aria-expanded', 'false');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-/* ------------------------------------------------------------
-   4) TOGGLE CONTATO / DEMO
------------------------------------------------------------- */
-$('#btnContato').addEventListener('click', () => {
-  $('#formContato').classList.remove('hide');
-  $('#formDemo').classList.add('hide');
-  $('#btnContato').classList.add('active');
-  $('#btnDemo').classList.remove('active');
-});
-$('#btnDemo').addEventListener('click', () => {
-  $('#formDemo').classList.remove('hide');
-  $('#formContato').classList.add('hide');
-  $('#btnDemo').classList.add('active');
-  $('#btnContato').classList.remove('active');
-});
+  function renderArtists() {
+    const grid = $('#artistGrid');
+    if (!grid) return;
+    grid.innerHTML = artists.map(artist => `
+      <button class="artist-card" type="button" data-artist="${artist.id}" aria-label="Ver catálogo de ${artist.nome}">
+        <img src="${assetUrl(artist.imagem)}" alt="${artist.nome}" loading="lazy">
+        <h3>${artist.nome}</h3><p class="muted">${artist.genero}</p>
+      </button>`).join('');
+    $$('.artist-card', grid).forEach(card => card.addEventListener('click', () => openArtistModal(card.dataset.artist)));
+  }
 
-/* ------------------------------------------------------------
-   5) RENDER: ARTISTAS
------------------------------------------------------------- */
-function renderArtists() {
-  const grid = $('#artistGrid');
-  if (!grid) return;
+  function renderReleases() {
+    const grid = $('#releaseGrid');
+    if (!grid) return;
+    grid.innerHTML = releases.map(release => {
+      const artist = artistById(release.artistaId);
+      const tracks = release.tracks.length ? release.tracks.map((track, index) => `
+        <div class="track"><span class="track-index">${index + 1}</span>
+          <button class="track-play" type="button" data-src="${assetUrl(track.src)}" data-track="${release.id}-${index}" aria-label="Tocar ${track.nome}"><i class="fa-solid fa-play"></i></button>
+          <span class="track-name">${track.nome}</span></div>`).join('') : '<p class="muted">Ouça este lançamento no Spotify.</p>';
+      return `<article class="release-card"><div class="release-head">
+        <img src="${assetUrl(release.capa)}" alt="Capa de ${release.titulo}" loading="lazy">
+        <div><div class="release-title">${release.titulo}</div><div class="release-artist">${artist?.nome ?? '—'}</div></div>
+        </div><div class="tracklist">${tracks}</div>
+        <a class="btn btn-spotify" href="${release.spotify}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-spotify"></i> Spotify</a></article>`;
+    }).join('');
+    $$('.track-play', grid).forEach(button => button.addEventListener('click', () => toggleTrack(button)));
+  }
 
-  grid.innerHTML = ARTISTS.map(a => `
-    <div class="artist-card" data-artist="${a.id}" tabindex="0" role="button"
-         aria-label="Ver catálogo de ${a.nome}">
-      <img src="${a.imagem}" alt="${a.nome}" loading="lazy" />
-      <h3>${a.nome}</h3>
-      <p class="muted">${a.genero}</p>
-    </div>
-  `).join('');
-
-  $$('.artist-card', grid).forEach(card => {
-    const open = () => openArtistModal(card.dataset.artist);
-    card.addEventListener('click', open);
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
-    });
-  });
-}
-
-/* ------------------------------------------------------------
-   6) RENDER: LANÇAMENTOS + PLAYER
------------------------------------------------------------- */
-const audioEl = new Audio();
-audioEl.preload = 'none';
-
-function renderReleases() {
-  const grid = $('#releaseGrid');
-  if (!grid) return;
-
-  grid.innerHTML = RELEASES.map(rel => {
-    const artista = artistById(rel.artistaId);
-    const tracks = rel.tracks.map((t, i) => `
-      <div class="track">
-        <span class="track-index">${i + 1}</span>
-        <button class="track-play" data-src="${t.src}" data-track="${rel.id}-${i}"
-                aria-label="Tocar ${t.nome}">
-          <i class="fa-solid fa-play"></i>
-        </button>
-        <span class="track-name">${t.nome}</span>
-      </div>
-    `).join('');
-
-    return `
-      <article class="release-card">
-        <div class="release-head">
-          <img src="${rel.capa}" alt="Capa de ${rel.titulo}" loading="lazy" />
-          <div>
-            <div class="release-title">${rel.titulo}</div>
-            <div class="release-artist">${artista ? artista.nome : '—'}</div>
-          </div>
-        </div>
-        <div class="tracklist">${tracks}</div>
-        <a class="btn btn-spotify" href="${rel.spotify}" target="_blank" rel="noopener">
-          <i class="fa-brands fa-spotify"></i> Spotify
-        </a>
-      </article>
-    `;
-  }).join('');
-
-  $$('.track-play', grid).forEach(btn => {
-    btn.addEventListener('click', () => toggleTrack(btn));
-  });
-}
-
-let currentTrackId = null;
-
-function toggleTrack(btn) {
-  const id  = btn.dataset.track;
-  const src = btn.dataset.src;
-  const icon = btn.querySelector('i');
-
-  if (currentTrackId === id) {
-    if (audioEl.paused) {
-      audioEl.play().catch(onAudioError);
-      icon.className = 'fa-solid fa-pause';
-    } else {
-      audioEl.pause();
-      icon.className = 'fa-solid fa-play';
+  function toggleTrack(button) {
+    const { track: id, src } = button.dataset;
+    const icon = $('i', button);
+    if (currentTrack === id) {
+      if (audio.paused) audio.play().then(() => { icon.className = 'fa-solid fa-pause'; }).catch(handleAudioError);
+      else audio.pause();
+      return;
     }
-    return;
+    if (currentTrack) {
+      const previousIcon = $(`.track-play[data-track="${CSS.escape(currentTrack)}"] i`);
+      if (previousIcon) previousIcon.className = 'fa-solid fa-play';
+    }
+    currentTrack = id;
+    audio.src = src;
+    audio.play().then(() => { icon.className = 'fa-solid fa-pause'; }).catch(handleAudioError);
+    audio.onended = () => { icon.className = 'fa-solid fa-play'; currentTrack = null; };
   }
 
-  if (currentTrackId) {
-    const prev = $(`.track-play[data-track="${currentTrackId}"] i`);
-    if (prev) prev.className = 'fa-solid fa-play';
+  function handleAudioError(error) {
+    console.warn('[Knitting] Não foi possível reproduzir o áudio:', error);
+    if (currentTrack) {
+      const icon = $(`.track-play[data-track="${CSS.escape(currentTrack)}"] i`);
+      if (icon) icon.className = 'fa-solid fa-play';
+    }
+    currentTrack = null;
   }
 
-  currentTrackId = id;
-  audioEl.src = src;
-  audioEl.play()
-    .then(() => { icon.className = 'fa-solid fa-pause'; })
-    .catch(onAudioError);
-
-  audioEl.onended = () => { icon.className = 'fa-solid fa-play'; };
-}
-
-function onAudioError(err) {
-  console.warn('[Knitting] Falha ao tocar áudio:', err);
-  alert('Não foi possível tocar esta faixa. Verifique se o arquivo existe (preenchaaqui.mp3).');
-}
-
-/* ------------------------------------------------------------
-   7) MODAL ARTISTA
------------------------------------------------------------- */
-const artistModal = $('#artistModal');
-
-function openArtistModal(artistId) {
-  const a = artistById(artistId);
-  if (!a) return;
-
-  $('#artistModalImg').src = a.imagem;
-  $('#artistModalImg').alt = a.nome;
-  $('#artistModalTitle').textContent = a.nome;
-  $('#artistModalGenre').textContent = a.genero;
-  $('#artistModalSpotify').href = a.spotify;
-
-  const releasesDoArtista = RELEASES.filter(r => r.artistaId === artistId);
-  const catalog = $('#artistModalReleases');
-
-  catalog.innerHTML = releasesDoArtista.length
-    ? releasesDoArtista.map(r => `
-        <div class="catalog-item">
-          <img src="${r.capa}" alt="Capa de ${r.titulo}" loading="lazy" />
-          <div class="catalog-item-info">
-            <h4>${r.titulo}</h4>
-            <p>${r.tracks.length} faixa${r.tracks.length > 1 ? 's' : ''}</p>
-          </div>
-          <a href="${r.spotify}" target="_blank" rel="noopener">Spotify ↗</a>
-        </div>
-      `).join('')
-    : '<p class="muted">Nenhum release cadastrado ainda.</p>';
-
-  artistModal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeArtistModal() {
-  artistModal.classList.remove('open');
-  document.body.style.overflow = '';
-}
-$('#artistModalClose').addEventListener('click', closeArtistModal);
-artistModal.addEventListener('click', (e) => {
-  if (e.target === artistModal) closeArtistModal();
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeArtistModal();
-});
-
-/* ============================================================
-   8) SUPABASE — UPLOAD DE TEXTO (.txt) NO BUCKET "releases"
-   ------------------------------------------------------------
-   - Gera conteúdo em texto puro (chave: valor, uma por linha)
-   - Nome do arquivo: tipo/AAAA-MM-DDTHH-MM-SS-xxx.txt
-   - Content-Type: text/plain
-============================================================ */
-
-function toTxt(obj) {
-  // Converte objeto em texto legível, campo por campo
-  return Object.entries(obj)
-    .map(([k, v]) => `${k}: ${v ?? ''}`)
-    .join('\n') + '\n';
-}
-
-function txtPath(prefix) {
-  const d = new Date().toISOString().replace(/[:.]/g, '-');
-  const rand = Math.random().toString(36).slice(2, 7);
-  return `${prefix}/${d}-${rand}.txt`;
-}
-
-async function uploadTxt(path, content) {
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-  const { error } = await sb.storage
-    .from(BUCKET)
-    .upload(path, blob, { contentType: 'text/plain', upsert: false });
-  if (error) throw error;
-  return path;
-}
-
-function setStatus(el, msg, type = 'success') {
-  if (!el) return;
-  el.textContent = msg;
-  el.className = `status ${type}`;
-}
-
-/* ------------------------------------------------------------
-   9) FORM CONTATO → contatos/*.txt
------------------------------------------------------------- */
-$('#contactForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const status  = $('#contactStatus');
-  const email   = $('#contactEmail').value.trim();
-  const subject = $('#contactSubject').value.trim();
-  const message = $('#contactMessage').value.trim();
-
-  if (!email || !subject || !message) {
-    return setStatus(status, 'Preencha todos os campos.', 'error');
+  function openArtistModal(id) {
+    const artist = artistById(id);
+    const modal = $('#artistModal');
+    if (!artist || !modal) return;
+    $('#artistModalImg').src = assetUrl(artist.imagem);
+    $('#artistModalImg').alt = artist.nome;
+    $('#artistModalTitle').textContent = artist.nome;
+    $('#artistModalGenre').textContent = artist.genero;
+    $('#artistModalSpotify').href = artist.spotify;
+    const catalog = releases.filter(release => release.artistaId === id);
+    $('#artistModalReleases').innerHTML = catalog.length ? catalog.map(release => `
+      <div class="catalog-item"><img src="${assetUrl(release.capa)}" alt="Capa de ${release.titulo}" loading="lazy">
+      <div class="catalog-item-info"><h4>${release.titulo}</h4><p>${release.tracks.length} faixa${release.tracks.length === 1 ? '' : 's'}</p></div>
+      <a href="${release.spotify}" target="_blank" rel="noopener noreferrer">Spotify ↗</a></div>`).join('') : '<p class="muted">Nenhum lançamento cadastrado.</p>';
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
 
-  const content = toTxt({
-    tipo: 'contato',
-    quando: new Date().toLocaleString('pt-BR'),
-    email,
-    assunto: subject,
-    mensagem: message
-  });
-
-  setStatus(status, 'Enviando…');
-  try {
-    await uploadTxt(txtPath('contatos'), content);
-    setStatus(status, '✅ Mensagem enviada! Responderemos em breve.');
-    e.target.reset();
-  } catch (err) {
-    console.error(err);
-    setStatus(status, `Erro ao enviar: ${err.message || 'tente novamente'}`, 'error');
-  }
-});
-
-/* ------------------------------------------------------------
-   10) FORM DEMO → demos/*.txt
------------------------------------------------------------- */
-$('#demoForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const status = $('#demoStatus');
-
-  const data = {
-    tipo: 'demo',
-    quando: new Date().toLocaleString('pt-BR'),
-    nome_musica:   $('#demoNomeMusica').value.trim(),
-    nome_artistico: $('#demoArtistico').value.trim(),
-    genero:        $('#demoGenero').value,
-    nome_completo: $('#demoNomeCompleto').value.trim(),
-    objetivo:      $('#demoObjetivo').value,
-    pretende:      $('#demoPretende').value.trim(),
-    email:         $('#demoEmail').value.trim(),
-    link:          $('#demoLink').value.trim()
-  };
-
-  const faltando = ['nome_musica','nome_artistico','nome_completo','pretende','email','link']
-    .filter(k => !data[k]);
-  if (faltando.length) {
-    return setStatus(status, 'Preencha todos os campos.', 'error');
+  function closeArtistModal() {
+    $('#artistModal')?.classList.remove('open');
+    document.body.style.overflow = '';
   }
 
-  setStatus(status, 'Enviando demo…');
-  try {
-    await uploadTxt(txtPath('demos'), toTxt(data));
-    setStatus(status, '🎉 Obrigado! Nosso A&R irá analisar e responder em até 72h.');
-    e.target.reset();
-  } catch (err) {
-    console.error(err);
-    setStatus(status, `Erro ao enviar demo: ${err.message || 'tente novamente'}`, 'error');
+  function toText(fields) {
+    return Object.entries(fields).map(([key, value]) => `${key}: ${value ?? ''}`).join('\n') + '\n';
   }
-});
 
-/* ------------------------------------------------------------
-   11) NEWSLETTER → newsletter/*.txt
------------------------------------------------------------- */
-$('#newsletterForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const status = $('#newsStatus');
-  const email = $('#newsEmail').value.trim();
-  if (!email) return setStatus(status, 'Digite um e-mail válido.', 'error');
-
-  const content = toTxt({
-    tipo: 'newsletter',
-    quando: new Date().toLocaleString('pt-BR'),
-    email
-  });
-
-  setStatus(status, 'Inscrevendo…');
-  try {
-    await uploadTxt(txtPath('newsletter'), content);
-    setStatus(status, '📬 Obrigado! Você receberá nossas novidades.');
-    e.target.reset();
-  } catch (err) {
-    console.error(err);
-    setStatus(status, `Erro ao inscrever: ${err.message || 'tente novamente'}`, 'error');
+  async function submitToStorage(fields, status, form, successMessage) {
+    if (!form.reportValidity()) return;
+    if (!supabaseClient) {
+      setStatus(status, 'Envio indisponível: não foi possível conectar ao serviço de formulários. Tente novamente mais tarde.', 'error');
+      return;
+    }
+    const fileName = `${fields.tipo}/${new Date().toISOString().replace(/[:.]/g, '-')}-${crypto.randomUUID().slice(0, 8)}.txt`;
+    const submitButton = $('button[type="submit"]', form);
+    if (submitButton) submitButton.disabled = true;
+    setStatus(status, 'Enviando…');
+    try {
+      const { error } = await supabaseClient.storage.from(BUCKET).upload(fileName, new Blob([toText(fields)], { type: 'text/plain;charset=utf-8' }), { contentType: 'text/plain', upsert: false });
+      if (error) throw error;
+      setStatus(status, successMessage, 'success');
+      form.reset();
+    } catch (error) {
+      console.error('[Knitting] Falha no envio:', error);
+      setStatus(status, `Não foi possível enviar agora. ${error.message || 'Tente novamente mais tarde.'}`, 'error');
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
   }
-});
 
-/* ------------------------------------------------------------
-   12) INIT
------------------------------------------------------------- */
-function init() {
-  renderArtists();
-  renderReleases();
-}
-document.addEventListener('DOMContentLoaded', init);
-
-/* ------------------------------------------------------------
-   13) PWA
------------------------------------------------------------- */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(err => {
-      console.warn('[PWA] Falha ao registrar service worker:', err);
+  function fixNewsImagePaths() {
+    $$('img').forEach(image => {
+      if (image.getAttribute('src') === 'peido.jpg') image.src = assetUrl('covers/ricardo/peido/peido.jpeg');
+      if (image.getAttribute('src') === 'nobody.png') image.src = assetUrl('covers/knitting_cat/nobody/nobody.png');
     });
-  });
-}
+  }
+
+  function init() {
+    renderArtists();
+    renderReleases();
+    fixNewsImagePaths();
+    try {
+      if (window.supabase?.createClient) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch (error) { console.error('[Knitting] Supabase indisponível:', error); }
+
+    $('#hamburger')?.addEventListener('click', () => {
+      const overlay = $('#menuOverlay');
+      const open = !overlay?.classList.contains('open');
+      overlay?.classList.toggle('open', open);
+      $('#hamburger')?.setAttribute('aria-expanded', String(open));
+    });
+    $('#closeMenu')?.addEventListener('click', () => { $('#menuOverlay')?.classList.remove('open'); $('#hamburger')?.setAttribute('aria-expanded', 'false'); });
+    $('#menuOverlay')?.addEventListener('click', event => { if (event.target.id === 'menuOverlay') { event.currentTarget.classList.remove('open'); $('#hamburger')?.setAttribute('aria-expanded', 'false'); } });
+    $$('[data-section]').forEach(element => element.addEventListener('click', event => { event.preventDefault(); showSection(element.dataset.section); }));
+    $('#btnContato')?.addEventListener('click', () => switchContactTab(false));
+    $('#btnDemo')?.addEventListener('click', () => switchContactTab(true));
+    $('#artistModalClose')?.addEventListener('click', closeArtistModal);
+    $('#artistModal')?.addEventListener('click', event => { if (event.target.id === 'artistModal') closeArtistModal(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeArtistModal(); $('#menuOverlay')?.classList.remove('open'); $('#hamburger')?.setAttribute('aria-expanded', 'false'); } });
+
+    $('#contactForm')?.addEventListener('submit', event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      submitToStorage({ tipo: 'contatos', quando: new Date().toLocaleString('pt-BR'), email: $('#contactEmail').value.trim(), assunto: $('#contactSubject').value.trim(), mensagem: $('#contactMessage').value.trim() }, $('#contactStatus'), form, 'Mensagem enviada! Responderemos em breve.');
+    });
+    $('#demoForm')?.addEventListener('submit', event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      submitToStorage({ tipo: 'demos', quando: new Date().toLocaleString('pt-BR'), nome_musica: $('#demoNomeMusica').value.trim(), nome_artistico: $('#demoArtistico').value.trim(), genero: $('#demoGenero').value, nome_completo: $('#demoNomeCompleto').value.trim(), objetivo: $('#demoObjetivo').value, pretende: $('#demoPretende').value.trim(), email: $('#demoEmail').value.trim(), link: $('#demoLink').value.trim() }, $('#demoStatus'), form, 'Obrigado! Sua demo foi enviada.');
+    });
+    $('#newsletterForm')?.addEventListener('submit', event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      submitToStorage({ tipo: 'newsletter', quando: new Date().toLocaleString('pt-BR'), email: $('#newsEmail').value.trim() }, $('#newsStatus'), form, 'Obrigado! Você receberá nossas novidades.');
+    });
+
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('./sw.js').catch(error => console.warn('[PWA] Service worker não registrado:', error));
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+})();
